@@ -13,7 +13,8 @@ const createElement = (html, className) => {
   return chatDiv; // Return the created chat div
 };
 
-const apiKey = "AIzaSyB9-oXXqWtaF7TLljK5DR0Sbu8jXSOFNZE"; // Replace with your actual API key
+                                                                                                    
+  
 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
 function cleanText(input) {
