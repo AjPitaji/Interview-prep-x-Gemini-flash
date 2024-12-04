@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>File Upload using HTML CSS &amp; JS</title>
+    <link rel="stylesheet" href="/css/resume.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h3>Upload Files</h3>
+        <div class="drop_box">
+          <header>
+            <h4>Select File here</h4>
+          </header>
+          <p>Files Supported: PDF, TEXT, DOC, DOCX</p>
+          <input
+            type="file"
+            hidden
+            accept=".pdf"
+            id="fileID"
+            onchange="handleFileSelect(event)"
+          />
+          <button
+            class="btn"
+            onclick="document.getElementById('fileID').click()"
+          >
+            Choose File
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+      // Handle file selection and text extraction
+      function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file && file.type === "application/pdf") {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const pdfData = new Uint8Array(e.target.result);
+            extractTextFromPDF(pdfData);
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          alert("Please select a PDF file.");
+        }
+      }
+
+      // Extract text from PDF using pdf.js
+      function extractTextFromPDF(pdfData) {
+        const loadingTask = pdfjsLib.getDocument(pdfData);
+        loadingTask.promise
+          .then(function (pdf) {
+            let extractedText = "";
+            const numPages = pdf.numPages;
+
+            // Extract text from each page
+            for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+              pdf.getPage(pageNum).then(function (page) {
+                page.getTextContent().then(function (textContent) {
+                  textContent.items.forEach(function (item) {
+                    extractedText += item.str + " ";
+                  });
+
+                  // Once text is extracted from the last page, send it via POST request
+                  if (pageNum === numPages) {
+                    console.log(extractedText);
+                    // Make a POST request to /upload/resume
+                    fetch("/interview/upload/resume", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ content: extractedText }),
+                    })
+                      .then(() => {
+                        // Redirect to /interview/questions/resume after the content is processed
+                        window.location.href = "/interview/questions/resume";
+                      })
+                      .catch((error) => {
+                        console.error("Error:", error);
+                      });
+                  }
+                });
+              });
+            }
+          })
+          .catch(function (error) {
+            console.error("Error extracting PDF text:", error);
+          });
+      }
+    </script>
+  </body>
+</html>

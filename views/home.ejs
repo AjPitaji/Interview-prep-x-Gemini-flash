@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <div class="loader"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/css/home.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.cdnfonts.com/css/there-brat" rel="stylesheet" />
+    <title>Interview-Prep Portal</title>
+  </head>
+
+  <body style="background: hsl(207, 19%, 9%)">
+    <h1 class="ml13" style="position: relative; left: 10px">
+      Interview-Prep Portal
+    </h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+
+    <div class="grid-container">
+      <% types.forEach(function(type){%>
+      <div class="card" style="background-image: url(<%=type.image%>)">
+        <div class="card-content">
+          <h2 class="card-title"><%=type.type%></h2>
+          <p class="card-body"><%=type.description%></p>
+          <a href="/companies/<%=type.type%>" class="button">Learn More</a>
+        </div>
+      </div>
+      <%})%>
+    </div>
+  </body>
+
+  <script>
+    // Wrap every letter in a span
+    var textWrapper = document.querySelector(".ml13");
+    textWrapper.innerHTML = textWrapper.textContent.replace(
+      /\S/g,
+      "<span class='letter'>$&</span>"
+    );
+
+    // anime.timeline({loop: false})
+    //   .add({
+    //     targets: '.ml13 .letter',
+    //     translateY: [100,0],
+    //     translateZ: 0,
+    //     opacity: [0,1],
+    //     easing: "easeOutExpo",
+    //     duration: 1400,
+    //     delay: (el, i) => 300 + 30 * i
+    //   }).add({
+    //     targets: '.ml13 .letter',
+    //     // translateY: [0,-100],
+    //     // opacity: [1,0],
+
+    //     duration: 1200,
+    //     delay: (el, i) => 100 + 30 * i
+    //   });
+    window.addEventListener("load", () => {
+      const loader = document.querySelector(".loader");
+
+      loader.classList.add("loader--hidden");
+
+      loader.addEventListener("transitionend", () => {
+        document.body.removeChild(loader);
+      });
+    });
+  </script>
+</html>
