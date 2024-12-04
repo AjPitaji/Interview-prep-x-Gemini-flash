@@ -2,7 +2,7 @@ const express = require("express");
 const companyModel = require("../models/companyModel.js");
 const router = express.Router();
 let content = "";
-const apiKey = process.env.apiKey;
+const apiKey = process.env.API_KEY;                   ;
 router.use(express.json());
 router.get("/:company", async (req, res) => {
   const company = req.params.company;
